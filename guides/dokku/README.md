@@ -24,29 +24,18 @@ To complete this guide, you need:
     ```shell
     dokku proxy:ports-set code http:80:3000
     ```
-4. Force set the connection token. Without this, each restart of VSCode will use a new connection token, requiring checking the logs for the connection token.
-    ```shell
-    dokku config:set code DOKKU_DOCKERFILE_START_CMD='--connectionToken 4f76badc-e6df-4bb0-9a39-aa1b1ceb386c'
-    ```
-6. Deploy OpenVSCode Server from a docker image.
+4. Deploy OpenVSCode Server from a docker image.
     ```shell
     dokku git:from-image code gitpod/openvscode-server
     ```
-7. (Optional) Enable http auth for your server. In the below example, the username is `root` and the password is the connection token, `4f76badc-e6df-4bb0-9a39-aa1b1ceb386c`
+5. (Optional) Enable http auth for your server. In the below example, the username is `root` and the password is whatever you would like, such as `4f76badc-e6df-4bb0-9a39-aa1b1ceb386c`
     ```shell
     dokku http-auth:on code root 4f76badc-e6df-4bb0-9a39-aa1b1ceb386c
     ```
-8. (Optional) Enable ssl via letsencrypt.
+6. (Optional) Enable ssl via letsencrypt.
     ```shell
     dokku letsencrypt:enable code
     ```
-9. (Optional) Add a file `/home/dokku/code/nginx.conf.d/vscode.conf` with the following contents. This will transparently set the connection token on requests, allowing users to avoid needing to set a querystring token for their requests in order to access OpenVSCode.
-    ```nginx
-    # in /home/dokku/code/nginx.conf.d/vscode.conf
-    add_header Set-Cookie "vscode-tkn=4f76badc-e6df-4bb0-9a39-aa1b1ceb386c; Path=/";
-    ```
-    - Reload nginx after this is performed via `sudo service nginx reload`.
-
 ## Start the server
 
 The server should be automatically started by the above commands.
